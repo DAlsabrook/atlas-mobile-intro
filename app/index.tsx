@@ -1,6 +1,7 @@
 import { useActivities } from "@/hooks/useActivities";
 import { Link } from "expo-router";
 import { Text, View, StyleSheet, Pressable } from "react-native";
+import { FlashList } from '@shopify/flash-list'
 
 export default function Index() {
   let { activities } = useActivities();
@@ -9,14 +10,18 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.activities}>
-        {activities.map((activity) => (
-          <View key={activity.id} style={styles.activityContainer}>
-            <Text style={styles.dateText}>{new Date(activity.date * 1000).toLocaleString()}</Text>
-            <Text style={styles.stepsText}>Steps: {activity.steps}</Text>
-          </View>
-        ))}
+        <FlashList
+          data={activities}
+          estimatedItemSize={200}
+          renderItem={({ item }) => (
+            <View key={item.id} style={styles.activityContainer}>
+              <Text style={styles.dateText}>{new Date(item.date * 1000).toLocaleString()}</Text>
+              <Text style={styles.stepsText}>Steps: {item.steps}</Text>
+            </View>
+          )}
+        />
       </View>
-      <View style={styles.bottonContainer}>
+      <View style={styles.buttonContainer}>
         <Link style={styles.button} href={'/add-activity-screen'} replace>
           <Text style={styles.buttonText}>Add Activity</Text>
         </Link>
@@ -36,8 +41,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEF9E6',
   },
   activities: {
+    flex: 1,
     width: '100%',
-    alignItems: "center",
     padding: 15
   },
   activityContainer: {
@@ -55,7 +60,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginBottom: 4
   },
-  bottonContainer: {
+  buttonContainer: {
     width: '100%',
     alignItems: 'center'
   },
