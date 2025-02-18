@@ -12,16 +12,19 @@ export function useActivities() {
     const [activities, setActivities] = useState<Activity[]>();
     const db = useSQLiteContext();
 
+
     function getActivities() {
-        return db.getAllSync<Activity>('Select * FROM activities')
+        return db.getAllSync<Activity>("SELECT * FROM activities");
+    }
+
+    function reload() {
+        const data = getActivities();
+        setActivities(data);
     }
 
     useEffect(() => {
-        const data = getActivities()
-        console.log('DB DATA:')
-        console.log(data)
-        setActivities(data)
-    }, [])
+        reload();
+    }, []);
 
     return { getActivities, activities }
 }
