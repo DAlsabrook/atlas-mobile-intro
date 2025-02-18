@@ -14,7 +14,12 @@ export function useActivities() {
 
 
     function getActivities() {
-        return db.getAllSync<Activity>("SELECT * FROM activities");
+        return db.getAllSync<Activity>("SELECT * FROM activities ORDER BY date DESC");
+    }
+
+    function insertActivity(steps: number, date: Date) {
+        db.execSync(`INSERT INTO activities (steps, date) VALUES (${steps}, ${Math.floor(date.getTime() / 1000)})`);
+        reload();
     }
 
     function reload() {
@@ -26,5 +31,5 @@ export function useActivities() {
         reload();
     }, []);
 
-    return { getActivities, activities }
+    return { getActivities, activities, insertActivity }
 }
